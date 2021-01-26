@@ -560,19 +560,14 @@ func (b *Writer) Write(buf []byte) (n int, err error) {
 				}
 
 			case '\033':
-				j := i
-				for {
-					j++
+				var j int
 
-					// these are all the things in an escape sequence minus:
-					// the head, the actual "escape" is already consumed (the \033 above)
-					// the tail, the single alpha character that denotes what kind of
-					// sequence it is. This is consumed before the next iteration as a
-					// natural step.
-					if buf[j] == ';' || buf[j] == '[' || (buf[j] >= '0' && buf[j] <= '9') {
-						continue
-					}
-					break
+				// these are all the things in an escape sequence minus:
+				// the head, the actual "escape" is already consumed (the \033 above)
+				// the tail, the single alpha character that denotes what kind of
+				// sequence it is. This is consumed before the next iteration as a
+				// natural step.
+				for j = i + 1; buf[j] == ';' || buf[j] == '[' || (buf[j] >= '0' && buf[j] <= '9'); j++ {
 				}
 
 				b.append(buf[n:j]) // include the buffer.
