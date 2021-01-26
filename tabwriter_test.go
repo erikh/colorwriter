@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package tabwriter_test
+package colorwriter_test
 
 import (
 	"bytes"
@@ -10,7 +10,8 @@ import (
 	"io"
 	"io/ioutil"
 	"testing"
-	. "text/tabwriter"
+
+	. "github.com/erikh/colorwriter"
 )
 
 type buffer struct {
