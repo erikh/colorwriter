@@ -563,15 +563,25 @@ func (b *Writer) Write(buf []byte) (n int, err error) {
 				j := i
 				for {
 					j++
+
+					// these are all the things in an escape sequence minus:
+					// the head, the actual "escape" is already consumed (the \033 above)
+					// the tail, the single alpha character that denotes what kind of
+					// sequence it is. This is consumed before the next iteration as a
+					// natural step.
 					if buf[j] == ';' || buf[j] == '[' || (buf[j] >= '0' && buf[j] <= '9') {
 						continue
 					}
 					break
 				}
 
-				b.append(buf[n:j])
+				b.append(buf[n:j]) // include the buffer.
+
+				// subtract the sequence from the width; add
+				// an extra for the escape code we already consumed
 				b.cell.width -= j - i + 1
-				n = j
+
+				n = j // set to end of escape sequence
 			case Escape:
 				// start of escaped sequence
 				b.append(buf[n:i])
